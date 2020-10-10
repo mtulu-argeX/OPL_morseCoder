@@ -14,7 +14,7 @@ double getLastTime(){
 
 void setup() {
   // Open serial communications and wait for port to open:
-  pinMode(9, OUTPUT);
+  pinMode(8, OUTPUT);
   pinMode(A0, OUTPUT);
 
   // set the data rate for the SoftwareSerial port
@@ -35,7 +35,7 @@ void loop() { // run over and over
     data = (mySerial.parseInt() * 1000) / 32;
     duration = (unsigned long)data;
     if(duration > 0){
-        tone(9,  641, duration);
+        tone(8,  641, duration);
     }
     lastTime = millis()/1000.0;
   }
