@@ -1,89 +1,94 @@
-
 PROC morseApp:
 LOCAL a$(10)
 LOCAL b$(10)
 LOCAL c
 LOCAL n
-c = 1
+
+LOPEN "TTY:A"
+LOADM "rsset"
+rsset:(16,0,8,1,4,&0)
+
+c = 0
 n = 0
 
-print "input word"
+start::
+print "Enter words to transmit:"
 input a$
+LPRINT "" REM This line starts the radio TX
+pause 10  REM Wait for radio to be ready
 
 do
-  c = c + 1
+	c = c + 1
 until LEFT$(a$,c) = a$ 
 
 b$ = a$
 n = c
 
 do
-  c = c - 1
-  vat1:(LEFT$(b$,1))
-  b$ = RIGHT$(b$,c)
+	c = c - 1
+	vat1:(LEFT$(b$,1))
+	b$ = RIGHT$(b$,c)
 until c = 0
 
-input a$
+goto start
 ENDP
 
 PROC vat1:(character$)
-LOCAL duration%
-duration% = 2
 
 if character$ = "a"
-  vat2:(12 * duration%)
+	vat2:(13)
 elseif character$ = "b"
-  vat2:(2111 * duration%)
-elseif character$ = "b"
-  vat2:(2111 * duration%)
+	vat2:(3111)
 elseif character$ = "c"
-  vat2:(2121 * duration%)
+	vat2:(3131)
 elseif character$ = "d"
-  vat2:(211 * duration%)
+	vat2:(311)
 elseif character$ = "e"
-  vat2:(1 * duration%)
+	vat2:(1)
 elseif character$ = "f"
-  vat2:(1121 * duration%)
+	vat2:(1131)
 elseif character$ = "g"
-  vat2:(221 * duration%)
+	vat2:(331)
 elseif character$ = "h"
-  vat2:(1111 * duration%)
+	vat2:(1111)
 elseif character$ = "i"
-  vat2:(11 * duration%)
+	vat2:(11)
 elseif character$ = "j"
-  vat2:(1222 * duration%)
+	vat2:(1333)
 elseif character$ = "k"
-  vat2:(212 * duration%)
+	vat2:(313)
 elseif character$ = "l"
-  vat2:(1211 * duration%)
+	vat2:(1311)
 elseif character$ = "m"
-  vat2:(22 * duration%)
+	vat2:(33)
 elseif character$ = "n"
-  vat2:(21 * duration%)
+	vat2:(31)
 elseif character$ = "o"
-  vat2:(222 * duration%)
+	vat2:(333)
 elseif character$ = "p"
-  vat2:(1221 * duration%)
+	vat2:(1331)
 elseif character$ = "q"
-  vat2:(2212 * duration%)
+	vat2:(3313)
 elseif character$ = "r"
-  vat2:(121 * duration%)
+	vat2:(131)
 elseif character$ = "s"
-  vat2:(111 * duration%)
+	vat2:(111)
 elseif character$ = "t"
-  vat2:(2 * duration%)
+	vat2:(3)
 elseif character$ = "u"
-  vat2:(112 * duration%)
+	vat2:(113)
 elseif character$ = "v"
-  vat2:(1112 * duration%)
+	vat2:(1113)
 elseif character$ = "w"
-  vat2:(122 * duration%)
+	vat2:(133)
 elseif character$ = "x"
-  vat2:(2112 * duration%)
+	vat2:(3113)
 elseif character$ = "y"
-  vat2:(2122 * duration%)	
+	vat2:(3133)	
 elseif character$ = "z"
-  vat2:(2211 * duration%)	
+	vat2:(3311)	
+elseif character$ = " "
+	vat2:(0)
 endif	
 
 ENDP
@@ -94,28 +99,38 @@ LOCAL s%
 LOCAL d
 LOCAL r
 LOCAL letterSpace% 
+LOCAL duration%
 LOCAL a%(4)
-letterSpace% = 1
 
-x% = signal%
+duration% = 2
+letterSpace% = 3 
+letterSpace% = letterSpace% * duration%
+x% = signal% * duration%
 s% = x%
 
+if s% = 0 
+	pause duration% * 7
+	goto skip
+endif
+
 do
-  d = d + 1	
-  s% = s% / 10
+	d = d + 1
+	s% = s% / 10
 until s% = 0	
 r = d
 
 do
-  a%(d) = x% / (10**(d-1))
-  x% = x% - (a%(d) * (10**(d-1)))
-  d = d - 1
+	a%(d) = x% / (10**(d-1))
+	x% = x% - (a%(d) * (10**(d-1)))
+	d = d - 1
 until d = 0
 
 do 
-  BEEP a%(r),400
-  r = r - 1
-  until r = 0
+	LPRINT a%(r)
+	BEEP a%(r),641
+	r = r - 1
+until r = 0
 pause letterSpace%
 
+skip::
 ENDP
