@@ -5,5 +5,5 @@ Once it runs Morse Codder expect a text from the user. Than, program converts th
 
 OPL is a very old language hence you may not open the original upload files, so I uploaded morseApp.txt the readable form of the original morseApp code.
 
-#Edit_!
+#Edit_1
 The serial coommunication is added to the codde. Now it can send the translated morse code over serial connection to the client hardware. The client hardware then interface with the radio and sends the morse code over air. 
